@@ -1,0 +1,6 @@
+alice, bob, carol, eve
+top-secret, secret, public
+rw,         ,       
+r,          rw,    rw
+,           r,     rw
+,           ,      r

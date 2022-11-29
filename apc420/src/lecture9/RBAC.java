@@ -1,6 +1,7 @@
 package lecture9;
  
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner; 
 
@@ -11,7 +12,6 @@ import java.util.Scanner;
  *                 a role name
  */
 class Role {
-	
 	List<Role> parents = new ArrayList<>();
 	List<Permission> permissions = new ArrayList<>();
 	List<String> subjects = new ArrayList<>();
@@ -24,32 +24,62 @@ class Role {
 	// add parent role and return 'this' object (to allow method chaining)
 	Role addParent(Role parent) {
 		parents.add(parent);
-		return parent;
+		return this;
 	}
 	
 	// add permission object and return 'this' object
 	Role addPermission(Permission permission) {
 		permissions.add(permission);
+		return this;
 		
 	}
+	
 	// add subject (so that the 'subject' will have this role) and return 'this' object
 	Role addSubject(String subject) {
 		subjects.add(subject);
+		return this;
 	}
 	
 	// check whether this role has the permission that grants access 'rights' to 'object'
 	boolean checkPermission(String object, String rights) {
-		// TODO
+		
+		for(int i=0; i < permissions.size(); i++) {
+			if (permissions.get(i).checkPermission(object, rights)) {
+				return true;
+			}
+		}
+		
+		for (int j=0; j < parents.size(); j++) {
+			if (parents.get(j).checkPermission(object, rights)) {
+				return true;
+			}
+		} 
+		return false;
 	}
 	
 	// check whether 'subject' has the access 'rights' to 'objects'
 	boolean checkPermission(String subject, String object, String rights) {
-		// TODO
+		
+		if (this.subjects.contains(subject)) {
+			if (checkPermission(object, rights)) {
+				return true;
+			}
+			return false;
+		}
+		return false;
 	}
 	
 	// return a string representation of this role (need to include all information)
 	public String toString() {
-		// TODO
+		
+		String [] parentList = new String[parents.size()];
+		
+		for (int i=0; i < parents.size(); i++) {
+			parentList[i] = this.parents.get(i).name;
+		}
+			
+		return this.name + ": (Permissions: " + this.permissions + ", Subjects: " + this.subjects + ", Parents: " 
+				+ Arrays.toString(parentList) + ")";
 	}
 }
 
@@ -87,10 +117,18 @@ public class RBAC {
 		roles.add(role);
 		return this;
 	}
+	
 	// check whether 'subject' has the access 'rights' to 'object'
 	boolean checkPermission(String subject, String object, String rights) {
-		// TODO
+		
+		for (int i = 0; i < roles.size(); i++) {
+				if (roles.get(i).checkPermission(subject, object, rights)) {
+					return true;
+				} 
+		}
+		return false;
 	}
+	
 	// return string representation of the RBAC policy	
 	public String toString() {
 		String ret = "";
