@@ -27,9 +27,9 @@ public class KDC {
 
 		kdc = new SimpleKdcServer();
 		kdc.setKdcHost("localhost");
-		kdc.setKdcPort(5000);
+		kdc.setKdcPort(88);
 		
-		kdc.setAllowUdp(false);
+		kdc.setAllowUdp(true);
 		kdc.setAllowTcp(true);
 		
 		kdc.setKdcRealm("CS.UWM.EDU");
